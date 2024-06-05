@@ -303,13 +303,9 @@ PLATFORM=linux/amd64
 build-docker-full: ## Build Docker image for development.
 	@echo "build docker container"
 	tar -ch . | \
-	docker buildx build - \
-	--platform $(PLATFORM) \
+	docker build - \
 	--build-arg BINGO=false \
 	--build-arg GO_BUILD_TAGS=$(GO_BUILD_TAGS) \
-	--build-arg WIRE_TAGS=$(WIRE_TAGS) \
-	--build-arg COMMIT_SHA=$$(git rev-parse HEAD) \
-	--build-arg BUILD_BRANCH=$$(git rev-parse --abbrev-ref HEAD) \
 	--tag grafana/grafana$(TAG_SUFFIX):dev \
 	$(DOCKER_BUILD_ARGS)
 
