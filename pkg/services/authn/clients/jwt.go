@@ -101,21 +101,21 @@ func (s *JWT) Authenticate(ctx context.Context, r *authn.Request) (*authn.Identi
 		id.Name = name
 	}
 
-	orgRoles, isGrafanaAdmin, err := getRoles(s.cfg, func() (org.RoleType, *bool, error) {
+	orgRoles, isGrafanaAdmin, err := getRoles(s.cfg, func() (map[string]org.RoleType, *bool, error) {
 		if s.cfg.JWTAuth.SkipOrgRoleSync {
-			return "", nil, nil
+			return make(map[string]org.RoleType), nil, nil
 		}
 
-		role, grafanaAdmin := s.extractRoleAndAdmin(claims)
-		if s.cfg.JWTAuth.RoleAttributeStrict && !role.IsValid() {
+		roles, grafanaAdmin := s.extractRolesAndAdmin(claims)
+		/*if s.cfg.JWTAuth.RoleAttributeStrict && !role.IsValid() {
 			return "", nil, errJWTInvalidRole.Errorf("invalid role claim in JWT: %s", role)
-		}
+		}*/
 
-		if !s.cfg.JWTAuth.AllowAssignGrafanaAdmin {
+		/*if !s.cfg.JWTAuth.AllowAssignGrafanaAdmin {
 			return role, nil, nil
-		}
+		}*/
 
-		return role, &grafanaAdmin, nil
+		return roles, &grafanaAdmin, nil
 	})
 
 	if err != nil {
@@ -204,6 +204,37 @@ func (s *JWT) extractRoleAndAdmin(claims map[string]any) (org.RoleType, bool) {
 		return org.RoleAdmin, true
 	}
 	return org.RoleType(role), false
+}
+
+func (s *JWT) extractRolesAndAdmin(claims map[string]any) (map[string]org.RoleType, bool) {
+	resultOrgRoles := make(map[string]org.RoleType)
+	if s.cfg.JWTAuth.RoleAttributePath == "" {
+		return resultOrgRoles, false
+	}
+
+	rolesSlice, err := util.SearchJSONForStringSliceAttr(s.cfg.JWTAuth.RoleAttributePath, claims)
+	if err != nil || len(rolesSlice) == 0 {
+		return resultOrgRoles, false
+	}
+
+	for _, role := range rolesSlice {
+		parsedRole := strings.Split(role, ":")
+		if len(parsedRole) != 3 {
+			continue
+		}
+		if parsedRole[2] == "admin" {
+			resultOrgRoles[parsedRole[1]] = org.RoleEditor
+
+		} else if parsedRole[2] == "viewer" {
+			resultOrgRoles[parsedRole[1]] = org.RoleViewer
+		}
+
+	}
+
+	/*if role == roleGrafanaAdmin {
+		return org.RoleAdmin, true
+	}*/
+	return resultOrgRoles, false
 }
 
 func (s *JWT) extractGroups(claims map[string]any) ([]string, error) {
