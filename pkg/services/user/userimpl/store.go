@@ -231,7 +231,7 @@ func (ss *sqlStore) Update(ctx context.Context, cmd *user.UpdateUserCommand) err
 		}
 
 		q := sess.ID(cmd.UserID).Where(ss.notServiceAccountFilter())
-		
+
 		setOptional(cmd.OrgID, func(v int64) { usr.OrgID = v })
 		setOptional(cmd.Password, func(v user.Password) { usr.Password = v })
 		setOptional(cmd.IsDisabled, func(v bool) {

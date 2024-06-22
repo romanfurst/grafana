@@ -324,8 +324,8 @@ func (a *accessControlDashboardGuardian) evaluate(evaluator accesscontrol.Evalua
 		}
 		a.log.Debug("Access denied to dashboard", "namespaceID", namespaceID, "userId", userID, "id", id, "permissions", evaluator.GoString())
 	}
-	return true, nil
-	//return ok, err
+
+	return ok, err
 }
 
 func (a *accessControlFolderGuardian) evaluate(evaluator accesscontrol.Evaluator) (bool, error) {
@@ -350,8 +350,8 @@ func (a *accessControlFolderGuardian) evaluate(evaluator accesscontrol.Evaluator
 		}
 		a.log.Debug("Access denied to folder", "namespaceID", namespaceID, "userId", userID, "orgID", orgID, "uid", uid, "permissions", evaluator.GoString())
 	}
-	return true, nil
-	//return ok, err
+
+	return ok, err
 }
 
 func (a *accessControlDashboardGuardian) loadParentFolder(folderID int64) (*dashboards.Dashboard, error) {
