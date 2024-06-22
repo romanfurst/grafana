@@ -303,10 +303,11 @@ PLATFORM=linux/amd64
 build-docker-full: ## Build Docker image for development.
 	@echo "build docker container"
 	tar -ch . | \
-	docker build - \
+	docker buildx build - \
+	--platform linux/amd64 \
 	--build-arg BINGO=false \
 	--build-arg GO_BUILD_TAGS=$(GO_BUILD_TAGS) \
-	--tag grafana/grafana$(TAG_SUFFIX):dev \
+	--tag grafana/grafana$(TAG_SUFFIX):amd64 \
 	$(DOCKER_BUILD_ARGS)
 
 .PHONY: build-docker-full-ubuntu

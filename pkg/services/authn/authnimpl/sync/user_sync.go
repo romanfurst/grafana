@@ -204,6 +204,7 @@ func (s *UserSync) upsertAuthConnection(ctx context.Context, userID int64, ident
 	// This can happen when: using multiple auth client where the same user exists in several or
 	// changing to new auth client
 	if createConnection {
+		s.log.Info("XXXXXX SetAuthInfoCommand")
 		return s.authInfoService.SetAuthInfo(ctx, &login.SetAuthInfoCommand{
 			UserId:     userID,
 			AuthModule: identity.AuthenticatedBy,
@@ -292,6 +293,7 @@ func (s *UserSync) createUser(ctx context.Context, id *authn.Identity) (*user.Us
 		isAdmin = *id.IsGrafanaAdmin
 	}
 
+	s.log.Info("XXXXXX CreateUserCommand")
 	usr, errCreateUser := s.userService.Create(ctx, &user.CreateUserCommand{
 		Login:        id.Login,
 		Email:        id.Email,

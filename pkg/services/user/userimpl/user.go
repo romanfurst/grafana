@@ -232,6 +232,7 @@ func (s *Service) GetByEmail(ctx context.Context, query *user.GetUserByEmailQuer
 }
 
 func (s *Service) Update(ctx context.Context, cmd *user.UpdateUserCommand) error {
+	fmt.Sprintf("")
 	ctx, span := s.tracer.Start(ctx, "user.Update", trace.WithAttributes(
 		attribute.Int64("userID", cmd.UserID),
 	))

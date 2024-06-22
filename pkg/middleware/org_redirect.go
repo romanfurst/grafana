@@ -2,19 +2,18 @@ package middleware
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-	"strings"
-
 	"github.com/grafana/grafana/pkg/services/contexthandler"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/web"
+	"net/http"
+	"strconv"
 )
 
 // OrgRedirect changes org and redirects users if the
 // querystring `orgId` doesn't match the active org.
 func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
+	cfg.Logger.Info(fmt.Sprintf("XXXXXX org redirect"))
 	return func(res http.ResponseWriter, req *http.Request, c *web.Context) {
 		orgIdValue := req.URL.Query().Get("orgId")
 		orgId, err := strconv.ParseInt(orgIdValue, 10, 64)
@@ -25,12 +24,18 @@ func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
 
 		ctx := contexthandler.FromContext(req.Context())
 		if !ctx.IsSignedIn {
+			cfg.Logger.Info(fmt.Sprintf("XXXXXX !ctx.IsSignedIn %s", !ctx.IsSignedIn))
 			return
 		}
 
 		if orgId == ctx.OrgID {
+			cfg.Logger.Info(fmt.Sprintf("XXXXXX orgId == ctx.OrgID  %s", orgId == ctx.OrgID))
 			return
 		}
+		//orgId = int64(7) // TODO
+
+		cfg.Logger.Info(fmt.Sprintf("XXXXXX  update command: %s", &user.UpdateUserCommand{UserID: ctx.UserID, OrgID: &orgId}))
+		cfg.Logger.Info(fmt.Sprintf("XXXXXX  update command: userid %d orgid: %d orgid: %d", ctx.UserID, &orgId, orgId))
 
 		if err := userSvc.Update(ctx.Req.Context(), &user.UpdateUserCommand{UserID: ctx.UserID, OrgID: &orgId}); err != nil {
 			if ctx.IsApiRequest() {
@@ -39,10 +44,12 @@ func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
 				http.Error(ctx.Resp, "Not found", http.StatusNotFound)
 			}
 
+			cfg.Logger.Info(fmt.Sprintf("XXXXXX  no redirect "))
 			return
 		}
 
-		urlParams := c.Req.URL.Query()
+		//NOTE: CN workaround. Cause infinity loop of redirects after organisation switch
+		/*urlParams := c.Req.URL.Query()
 		qs := urlParams.Encode()
 
 		if urlParams.Has("kiosk") && urlParams.Get("kiosk") == "" {
@@ -51,7 +58,9 @@ func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
 		}
 
 		newURL := fmt.Sprintf("%s%s?%s", cfg.AppURL, strings.TrimPrefix(c.Req.URL.Path, "/"), qs)
+		cfg.Logger.Info(fmt.Sprintf("XXXXXX  %s%s?%s", cfg.AppURL, strings.TrimPrefix(c.Req.URL.Path, "/"), qs))
 
-		c.Redirect(newURL, 302)
+		cfg.Logger.Info(fmt.Sprintf("XXXXXX  302 "))
+		c.Redirect(newURL, 302)*/
 	}
 }

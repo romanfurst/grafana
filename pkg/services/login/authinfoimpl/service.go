@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -64,6 +65,7 @@ func (s *Service) GetAuthInfo(ctx context.Context, query *login.GetAuthInfoQuery
 		s.logger.Debug("auth info set in cache", "cacheKey", generateCacheKey(query))
 	}
 
+	s.logger.Info(fmt.Sprintf("XXXXXX UserAuth= %S", authInfo))
 	return authInfo, nil
 }
 
