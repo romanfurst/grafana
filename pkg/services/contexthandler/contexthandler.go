@@ -142,9 +142,6 @@ func (h *ContextHandler) Middleware(next http.Handler) http.Handler {
 		// End the span to make next handlers not wrapped within middleware span
 		span.End()
 
-		reqContext.Logger.Info(fmt.Sprintf("XXXXX Middleware"))
-		fmt.Sprintf("XXXXXX Middleware")
-
 		next.ServeHTTP(w, r)
 	})
 }

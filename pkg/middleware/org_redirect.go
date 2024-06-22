@@ -13,7 +13,6 @@ import (
 // OrgRedirect changes org and redirects users if the
 // querystring `orgId` doesn't match the active org.
 func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
-	cfg.Logger.Info(fmt.Sprintf("XXXXXX org redirect"))
 	return func(res http.ResponseWriter, req *http.Request, c *web.Context) {
 		orgIdValue := req.URL.Query().Get("orgId")
 		orgId, err := strconv.ParseInt(orgIdValue, 10, 64)
@@ -29,13 +28,8 @@ func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
 		}
 
 		if orgId == ctx.OrgID {
-			cfg.Logger.Info(fmt.Sprintf("XXXXXX orgId == ctx.OrgID  %s", orgId == ctx.OrgID))
 			return
 		}
-		//orgId = int64(7) // TODO
-
-		cfg.Logger.Info(fmt.Sprintf("XXXXXX  update command: %s", &user.UpdateUserCommand{UserID: ctx.UserID, OrgID: &orgId}))
-		cfg.Logger.Info(fmt.Sprintf("XXXXXX  update command: userid %d orgid: %d orgid: %d", ctx.UserID, &orgId, orgId))
 
 		if err := userSvc.Update(ctx.Req.Context(), &user.UpdateUserCommand{UserID: ctx.UserID, OrgID: &orgId}); err != nil {
 			if ctx.IsApiRequest() {
@@ -44,7 +38,6 @@ func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
 				http.Error(ctx.Resp, "Not found", http.StatusNotFound)
 			}
 
-			cfg.Logger.Info(fmt.Sprintf("XXXXXX  no redirect "))
 			return
 		}
 

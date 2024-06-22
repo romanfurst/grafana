@@ -3,8 +3,6 @@ package guardian
 import (
 	"context"
 	"errors"
-	"fmt"
-
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/services/accesscontrol"
 	"github.com/grafana/grafana/pkg/services/auth/identity"
@@ -310,7 +308,6 @@ func (a *accessControlFolderGuardian) CanCreate(folderID int64, isFolder bool) (
 
 func (a *accessControlDashboardGuardian) evaluate(evaluator accesscontrol.Evaluator) (bool, error) {
 	ok, err := a.ac.Evaluate(a.ctx, a.user, evaluator)
-	a.log.Info(fmt.Sprintf("XXXX accessControlDashboardGuardian evaluate ok = %v"), ok)
 	namespaceID, userID := a.user.GetNamespacedID()
 	if err != nil {
 		id := 0
@@ -333,7 +330,6 @@ func (a *accessControlDashboardGuardian) evaluate(evaluator accesscontrol.Evalua
 
 func (a *accessControlFolderGuardian) evaluate(evaluator accesscontrol.Evaluator) (bool, error) {
 	ok, err := a.ac.Evaluate(a.ctx, a.user, evaluator)
-	a.log.Info(fmt.Sprintf("XXXX accessControlFolderGuardian evaluate ok = %v"), ok)
 	namespaceID, userID := a.user.GetNamespacedID()
 	if err != nil {
 		uid := ""

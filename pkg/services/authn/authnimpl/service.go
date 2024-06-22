@@ -138,7 +138,6 @@ func (s *Service) authenticate(ctx context.Context, c authn.Client, r *authn.Req
 		s.errorLogFunc(ctx, err)("Failed to authenticate request", "client", c.Name(), "error", err)
 		return nil, err
 	}
-	s.log.Info("XXXXX client authenticated")
 
 	span.SetAttributes(
 		attribute.String("identity.ID", identity.ID.String()),
@@ -169,8 +168,6 @@ func (s *Service) authenticate(ctx context.Context, c authn.Client, r *authn.Req
 			return nil, err
 		}
 	}
-
-	s.log.Info(fmt.Sprintf("XXXXX return identity= %s", identity))
 
 	return identity, nil
 }

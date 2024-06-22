@@ -230,7 +230,6 @@ type RedirectValidator func(url string) error
 
 // HandleLoginResponse is a utility function to perform common operations after a successful login and returns response.NormalResponse
 func HandleLoginResponse(r *http.Request, w http.ResponseWriter, cfg *setting.Cfg, identity *Identity, validator RedirectValidator) *response.NormalResponse {
-	fmt.Sprint("XXXXXXXX HandleLoginResponse")
 	result := map[string]any{"message": "Logged in"}
 	result["redirectUrl"] = handleLogin(r, w, cfg, identity, validator)
 	return response.JSON(http.StatusOK, result)
@@ -248,7 +247,7 @@ func HandleLoginRedirectResponse(r *http.Request, w http.ResponseWriter, cfg *se
 }
 
 func handleLogin(r *http.Request, w http.ResponseWriter, cfg *setting.Cfg, identity *Identity, validator RedirectValidator) string {
-	fmt.Sprintf("XXXXXXXX handleLogin")
+
 	redirectURL := cfg.AppSubURL + "/"
 	if redirectTo := getRedirectURL(r); len(redirectTo) > 0 {
 		if validator(redirectTo) == nil {
