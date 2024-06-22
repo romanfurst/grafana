@@ -49,7 +49,6 @@ func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
 		}
 
 		newURL := fmt.Sprintf("%s%s?%s", cfg.AppURL, strings.TrimPrefix(c.Req.URL.Path, "/"), qs)
-		cfg.Logger.Info(fmt.Sprintf("XXXXXX  %s%s?%s", cfg.AppURL, strings.TrimPrefix(c.Req.URL.Path, "/"), qs))
 
 		cfg.Logger.Info(fmt.Sprintf("XXXXXX  302 "))
 		c.Redirect(newURL, 302)*/

@@ -247,7 +247,6 @@ func HandleLoginRedirectResponse(r *http.Request, w http.ResponseWriter, cfg *se
 }
 
 func handleLogin(r *http.Request, w http.ResponseWriter, cfg *setting.Cfg, identity *Identity, validator RedirectValidator) string {
-
 	redirectURL := cfg.AppSubURL + "/"
 	if redirectTo := getRedirectURL(r); len(redirectTo) > 0 {
 		if validator(redirectTo) == nil {
