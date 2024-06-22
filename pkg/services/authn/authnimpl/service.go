@@ -3,7 +3,6 @@ package authnimpl
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -98,7 +97,6 @@ func (s *Service) Authenticate(ctx context.Context, r *authn.Request) (*authn.Id
 	var authErr error
 	for _, item := range s.clientQueue.items {
 		if item.v.Test(ctx, r) {
-			s.log.Info(fmt.Sprintf("XXXXXX call s.authenticate in Authenticate with orgid = %d", r.OrgID))
 			identity, err := s.authenticate(ctx, item.v, r)
 			if err != nil {
 				// Note: special case for token rotation
@@ -206,7 +204,6 @@ func (s *Service) Login(ctx context.Context, client string, r *authn.Request) (i
 	}
 
 	r.SetMeta(authn.MetaKeyIsLogin, "true")
-	s.log.Info("XXXXXX call s.authenticate in Login")
 	id, err = s.authenticate(ctx, c, r)
 	if err != nil {
 		s.metrics.failedLogin.WithLabelValues(client).Inc()
@@ -336,7 +333,6 @@ func (s *Service) ResolveIdentity(ctx context.Context, orgID int64, namespaceID 
 		return nil, err
 	}
 
-	s.log.Info(fmt.Sprintf("XXXXXX call s.authenticate in ResolveIdentity with orgid = %d", orgID))
 	return s.authenticate(ctx, clients.ProvideIdentity(identity), r)
 }
 

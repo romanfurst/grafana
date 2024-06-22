@@ -219,8 +219,6 @@ func (ss *sqlStore) Update(ctx context.Context, cmd *user.UpdateUserCommand) err
 	cmd.Login = strings.ToLower(cmd.Login)
 	cmd.Email = strings.ToLower(cmd.Email)
 
-	ss.logger.Info("XXXXXX Lets update user")
-
 	return ss.db.WithTransactionalDbSession(ctx, func(sess *db.Session) error {
 		usr := user.User{
 			ID:      cmd.UserID,
@@ -251,8 +249,6 @@ func (ss *sqlStore) Update(ctx context.Context, cmd *user.UpdateUserCommand) err
 		})
 		setOptional(cmd.HelpFlags1, func(v user.HelpFlags1) { usr.HelpFlags1 = *cmd.HelpFlags1 })
 
-		ss.logger.Info(fmt.Sprintf("XXXXXX ID: %d user: name: %s email: %s login: %s orgId: %d pass: %s isDisabled: %v isadmin: %v  isotionalFlafs: %v", usr.ID, usr.Name, usr.Email, usr.Login, usr.OrgID, usr.Password, usr.IsDisabled, usr.IsAdmin, usr.HelpFlags1))
-		ss.logger.Info(fmt.Sprintf("XXXXXX q.Update(&usr) %s", &usr))
 		if _, err := q.Update(&usr); err != nil {
 			return err
 		}

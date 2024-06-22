@@ -82,7 +82,6 @@ func (s *OrgSync) SyncOrgRolesHook(ctx context.Context, id *authn.Identity, _ *a
 	}
 
 	orgIDs := make([]int64, 0, len(id.OrgRoles))
-	ctxLogger.Info(fmt.Sprintf("len(id.OrgRoles): %s"), len(id.OrgRoles))
 	// add any new org roles
 	for orgName, orgRole := range id.OrgRoles {
 		orga, e := s.orgService.GetByName(ctx, &org.GetOrgByNameQuery{Name: orgName})

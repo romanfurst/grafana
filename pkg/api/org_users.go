@@ -325,8 +325,6 @@ func (hs *HTTPServer) searchOrgUsersHelper(c *contextmodel.ReqContext, query *or
 	accessControlMetadata := map[string]accesscontrol.Metadata{}
 	if c.QueryBool("accesscontrol") {
 		permissions := c.SignedInUser.GetPermissions()
-		hs.log.Info(fmt.Sprintf("XXXXX query.OrgID != c.SignedInUser.GetOrgID() = %s", query.OrgID != c.SignedInUser.GetOrgID()))
-		hs.log.Info(fmt.Sprintf("XXXXXc.SignedInUser.GetOrgID() = %s", c.SignedInUser.GetOrgID()))
 		if query.OrgID != c.SignedInUser.GetOrgID() {
 			identity, err := hs.authnService.ResolveIdentity(c.Req.Context(), query.OrgID, c.SignedInUser.GetID())
 			if err != nil {

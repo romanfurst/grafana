@@ -113,8 +113,6 @@ func (h *ContextHandler) Middleware(next http.Handler) http.Handler {
 		}
 
 		identity, err := h.authnService.Authenticate(ctx, &authn.Request{HTTPRequest: reqContext.Req, Resp: reqContext.Resp})
-		reqContext.Logger.Info(fmt.Sprintf("XXXXXXX identity=%s err=%s", identity, err))
-		fmt.Sprintf("ssssss")
 		if err != nil {
 			// Hack: set all errors on LookupTokenErr, so we can check it in auth middlewares
 			reqContext.LookupTokenErr = err
@@ -134,8 +132,6 @@ func (h *ContextHandler) Middleware(next http.Handler) http.Handler {
 		))
 
 		if h.Cfg.IDResponseHeaderEnabled && reqContext.SignedInUser != nil {
-			reqContext.Logger.Info(fmt.Sprintf("XXXXXXX SignedInUser=%s ", reqContext.SignedInUser))
-			fmt.Sprintf("csdssdssd")
 			reqContext.Resp.Before(h.addIDHeaderEndOfRequestFunc(reqContext.SignedInUser))
 		}
 

@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/grafana/grafana/pkg/services/contexthandler"
 	"github.com/grafana/grafana/pkg/services/user"
 	"github.com/grafana/grafana/pkg/setting"
@@ -23,7 +22,6 @@ func OrgRedirect(cfg *setting.Cfg, userSvc user.Service) web.Handler {
 
 		ctx := contexthandler.FromContext(req.Context())
 		if !ctx.IsSignedIn {
-			cfg.Logger.Info(fmt.Sprintf("XXXXXX !ctx.IsSignedIn %s", !ctx.IsSignedIn))
 			return
 		}
 
